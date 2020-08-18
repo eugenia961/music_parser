@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  music-parser:
+    container_name: music-parser
+    stdin_open: true
+    image: music-parser:latest
+    build:
+      dockerfile: ./docker/music.parser.Dockerfile
+      context: .
+    volumes:
+      - music_sock:/sock
+      - nfsmount_music:/app/music-parser
+    restart: on-failure
+
+volumes:
+  music_sock:
+    driver: local
+  nfsmount_music:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+      device: ":/Users/eus/Project/music_parser/src/music_parser"
+
